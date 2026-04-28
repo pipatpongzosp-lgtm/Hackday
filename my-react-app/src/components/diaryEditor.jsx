@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 const moodOptions = [
@@ -22,8 +21,19 @@ const formatToday = () => {
 }
 
 export default function DiaryEditor({ onCreate, onUpdate, onCancelEdit, editingEntry }) {
-  const [text, setText] = useState(editingEntry ? editingEntry.text : '')
-  const [selectedMood, setSelectedMood] = useState(editingEntry ? editingEntry.mood : '')
+  const [text, setText] = useState('')
+  const [selectedMood, setSelectedMood] = useState('')
+
+  useEffect(() => {
+    if (editingEntry) {
+      setText(editingEntry.text)
+      setSelectedMood(editingEntry.mood)
+    } else {
+      setText('')
+      setSelectedMood('')
+    }
+  }, [editingEntry])
+
   const today = formatToday()
 
   const handleSave = () => {

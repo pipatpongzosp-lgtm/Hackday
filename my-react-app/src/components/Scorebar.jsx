@@ -1,27 +1,47 @@
 import EmotionBar from "./EmotionBar";
 
-const emotionsData = [
-    { id:1, label: "มีความสุข(Happy)", value: 85, color: "bg-yellow-500"},
-    { id:2, label: "ตื่นเต้น (Excited)", value: 20, color: "bg-blue-500"},
-    { id:3, label: "ผ่อนคลาย(Relax)", value: 50, color: "bg-red-500"},
-    { id:4, label: "เฉยๆ(indifferent)", value: 40, color: "bg-pink-500"},
-    { id:5, label: "กังวล(Anxious)", value: 65, color: "bg-green-500"},
-    { id:6, label: "เบื่อ(Bored)", value: 25, color: "bg-gray-500"},
-    { id:7, label: "เศร้า(Sad)", value: 43, color: "bg-orange-500"},
+const moodConfig = [
+  { name: 'happy', label: "มีความสุข(Happy)", color: "bg-yellow-500" },
+  { name: 'joy', label: "ตื่นเต้น (Joy)", color: "bg-blue-500" },
+  { name: 'strong', label: "สตรอง (Strong)", color: "bg-red-500" },
+  { name: 'love', label: "รัก (Love)", color: "bg-pink-500" },
+  { name: 'fear', label: "กังวล(Fear)", color: "bg-green-500" },
+  { name: 'angry', label: "โกรธ(Angry)", color: "bg-gray-500" },
+  { name: 'sad', label: "เศร้า(Sad)", color: "bg-orange-500" },
 ];
 
-export default function Scorebar() {
+export default function Scorebar({ entries = [] }) {
+  const totalEntries = entries.length;
+
+  const calculatePercentage = (moodName) => {
+    if (totalEntries === 0) return 0;
+    const moodCount = entries.filter((entry) => entry.mood === moodName).length;
+    return Math.round((moodCount / totalEntries) * 100);
+  };
+
   return (
-    <div className="flex flex-col items-center p-4">
-      <h2 className="text-xl font-bold mb-4">Emotion Scores</h2>
-      {emotionsData.map((emotion) => (
-        <EmotionBar 
-          key={emotion.id} 
-          name={emotion.label} 
-          score={emotion.value} 
-          color={emotion.color} 
-        />
-      ))}
+    <div className="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+      <div className="flex justify-between items-end mb-6">
+        <h2 className="text-2xl font-bold text-slate-800">Emotion distribution</h2>
+        <span className="text-sm font-semibold text-slate-500">Total: {totalEntries} entries</span>
+      </div>
+      
+      <div className="flex flex-col gap-4">
+        {moodConfig.map((config) => (
+          <EmotionBar 
+            key={config.name} 
+            name={config.label} 
+            score={calculatePercentage(config.name)} 
+            color={config.color} 
+          />
+        ))}
+      </div>
+
+      {totalEntries === 0 && (
+        <div className="mt-6 text-center text-slate-400 italic">
+          Start writing your first diary to see your emotion stats!
+        </div>
+      )}
     </div>
   );
 }
