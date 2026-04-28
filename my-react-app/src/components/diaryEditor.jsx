@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function DiaryEditor({ onCreate, today = "2026-04-28" }) {
   const [text, setText] = useState('');
