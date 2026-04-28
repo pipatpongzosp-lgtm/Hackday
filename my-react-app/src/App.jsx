@@ -4,8 +4,9 @@ import Motto from "./components/Motto";
 
 export default function App() {
   const handleSaveData = (data) => {
-    console.log("ได้รับข้อมูลแล้ว:", data);
-  };
+    setEntries((prevEntries) => [data, ...prevEntries])
+    console.log('ได้รับข้อมูลแล้ว:', data)
+  }
 
   return (
     <>
