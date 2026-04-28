@@ -54,12 +54,12 @@ export default function DiaryEditor({ onCreate, onUpdate, onCancelEdit, editingE
 
   return (
     <section className="w-full rounded-[40px] bg-white p-6 shadow-xl md:p-10">
-      <div className="mb-6 rounded-[32px] bg-slate-100 p-4 text-slate-500 shadow-sm">
+      <div className="mb-6 rounded-4xl bg-slate-100 p-4 text-slate-500 shadow-sm">
         <div className="text-xs uppercase tracking-[0.3em] text-slate-500">DATE</div>
         <div className="text-sm font-semibold text-slate-900">{displayDate}</div>
       </div>
 
-      <div className="relative mb-8 rounded-[32px] bg-[#FFF7ED] p-8 shadow-inner">
+      <div className="relative mb-8 rounded-4xl bg-[#FFF7ED] p-8 shadow-inner">
         <span className="absolute left-8 top-8 text-[10px] font-black uppercase tracking-widest text-orange-200">
           To My Self
         </span>

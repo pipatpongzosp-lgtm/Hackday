@@ -31,7 +31,7 @@ export default function Motto() {
   };
 
   return (
-    <div className="bg-[#F0EEE6] text-[#141413] p-6 rounded-xl border border-[#E3DBCC] w-[50%] font-['Poppins',sans-serif]">
+    <div className="bg-[#FFFFFF] text-[#141413] p-6 rounded-[40px] border border-[#E3DBCC] w-[75%] font-['Poppins',sans-serif]">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-5">
         <span className="text-sm font-medium tracking-widest text-[#141413] opacity-70">
