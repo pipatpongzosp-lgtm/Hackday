@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-
+import { useState } from 'react';
 
 const moodOptions = [
   { name: 'happy', emoji: '😊' },
@@ -11,9 +10,9 @@ const moodOptions = [
   { name: 'joy', emoji: '😃' },
 ]
 
-const formatToday = () => {
-  const now = new Date()
-  return now.toLocaleDateString('th-TH', {
+const formatToday = (dateInput) => {
+  const date = dateInput ? new Date(dateInput) : new Date()
+  return date.toLocaleDateString('th-TH', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -21,20 +20,11 @@ const formatToday = () => {
 }
 
 export default function DiaryEditor({ onCreate, onUpdate, onCancelEdit, editingEntry }) {
-  const [text, setText] = useState('')
-  const [selectedMood, setSelectedMood] = useState('')
-
-  useEffect(() => {
-    if (editingEntry) {
-      setText(editingEntry.text)
-      setSelectedMood(editingEntry.mood)
-    } else {
-      setText('')
-      setSelectedMood('')
-    }
-  }, [editingEntry])
-
-  const today = formatToday()
+  // กำหนดค่าเริ่มต้นจาก props โดยตรง (ไม่ต้องใช้ useEffect เพราะเราใช้ key ใน App.jsx แล้ว)
+  const [text, setText] = useState(editingEntry ? editingEntry.text : '')
+  const [selectedMood, setSelectedMood] = useState(editingEntry ? editingEntry.mood : '')
+  
+  const displayDate = editingEntry ? formatToday(editingEntry.timestamp) : formatToday()
 
   const handleSave = () => {
     if (!text.trim() || !selectedMood) {
@@ -42,16 +32,15 @@ export default function DiaryEditor({ onCreate, onUpdate, onCancelEdit, editingE
     }
 
     if (editingEntry) {
-      // Update existing entry
       const updatedEntry = {
         ...editingEntry,
         text: text.trim(),
         mood: selectedMood,
+        // เราอาจจะเก็บ timestamp เดิมไว้ หรืออัปเดตใหม่ก็ได้ ในที่นี้ขออัปเดตใหม่
         timestamp: new Date().toISOString(),
       }
       onUpdate(updatedEntry)
     } else {
-      // Create new entry
       const newEntry = {
         id: Date.now(),
         date: new Date(),
@@ -61,21 +50,13 @@ export default function DiaryEditor({ onCreate, onUpdate, onCancelEdit, editingE
       }
       onCreate(newEntry)
     }
-    setText('')
-    setSelectedMood('')
-  }
-
-  const handleCancel = () => {
-    setText('')
-    setSelectedMood('')
-    if (onCancelEdit) onCancelEdit()
   }
 
   return (
     <section className="w-full rounded-[40px] bg-white p-6 shadow-xl md:p-10">
       <div className="mb-6 rounded-[32px] bg-slate-100 p-4 text-slate-500 shadow-sm">
         <div className="text-xs uppercase tracking-[0.3em] text-slate-500">DATE</div>
-        <div className="text-sm font-semibold text-slate-900">{today}</div>
+        <div className="text-sm font-semibold text-slate-900">{displayDate}</div>
       </div>
 
       <div className="relative mb-8 rounded-[32px] bg-[#FFF7ED] p-8 shadow-inner">
@@ -115,15 +96,13 @@ export default function DiaryEditor({ onCreate, onUpdate, onCancelEdit, editingE
         >
           {editingEntry ? 'Update' : 'Create'}
         </button>
-        {editingEntry && (
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="rounded-3xl bg-slate-500 px-6 py-5 text-white transition hover:bg-slate-600"
-          >
-            Cancel
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onCancelEdit}
+          className="rounded-3xl bg-slate-500 px-6 py-5 text-white transition hover:bg-slate-600"
+        >
+          Cancel
+        </button>
       </div>
     </section>
   )

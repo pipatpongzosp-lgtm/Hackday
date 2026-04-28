@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SideBar from "./components/SideBar";
-import DiaryEditor from "./components/DiaryEditor";
+import DiaryEditor from "./components/diaryEditor";
 import Motto from "./components/Motto";
 import Scorebar from "./components/Scorebar";
 
@@ -37,6 +37,16 @@ export default function App() {
     setShowEditor(false);
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm("คุณต้องการลบบันทึกนี้ใช่หรือไม่?")) {
+      setEntries((prev) => prev.filter((entry) => entry.id !== id));
+      if (editingEntry && editingEntry.id === id) {
+        setEditingEntry(null);
+        setShowEditor(false);
+      }
+    }
+  };
+
   const handleGoHome = () => {
     setShowEditor(false);
     setEditingEntry(null);
@@ -49,6 +59,7 @@ export default function App() {
         onSelectEntry={handleSelectEntry} 
         onNewEntry={handleNewEntry}
         onGoHome={handleGoHome}
+        onDelete={handleDelete}
       />
       
       <main className="flex-1 p-10 flex flex-col items-center">
@@ -59,7 +70,9 @@ export default function App() {
           </div>
         ) : (
           <div className="w-full max-w-2xl">
+            {/* ใช้ key เพื่อให้ Component รีเซ็ต State ใหม่ทุกครั้งที่เปลี่ยน entry หรือเปิดหน้าใหม่ */}
             <DiaryEditor 
+              key={editingEntry ? editingEntry.id : 'new'}
               onCreate={handleCreate} 
               onUpdate={handleUpdate} 
               onCancelEdit={handleCancelEdit}

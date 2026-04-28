@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function SideBar({ entries, onSelectEntry, onNewEntry, onGoHome }) {
+export default function SideBar({ entries, onSelectEntry, onNewEntry, onGoHome, onDelete }) {
   const [filterMood, setFilterMood] = useState("all");
 
   const moodEmojiMap = {
@@ -57,18 +57,33 @@ export default function SideBar({ entries, onSelectEntry, onNewEntry, onGoHome }
           filteredEntries.map((entry) => (
             <div
               key={entry.id}
+              className="group relative bg-white p-4 rounded-xl shadow-sm cursor-pointer hover:bg-amber-50 hover:shadow-md transition border-l-4 border-amber-500 flex justify-between items-center"
               onClick={() => onSelectEntry(entry)}
-              className="bg-white p-4 rounded-xl shadow-sm cursor-pointer hover:bg-amber-50 hover:shadow-md transition border-l-4 border-amber-500"
             >
-              <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">
-                {new Date(entry.timestamp).toLocaleDateString('th-TH')}
+              <div className="flex-1 min-w-0">
+                <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">
+                  {new Date(entry.timestamp).toLocaleDateString('th-TH')}
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-2xl">{getEmoji(entry.mood)}</span>
+                  <span className="font-semibold text-slate-700 truncate block">
+                    {entry.text.substring(0, 15)}...
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-2xl">{getEmoji(entry.mood)}</span>
-                <span className="font-semibold text-slate-700 truncate">
-                  {entry.text.substring(0, 20)}...
-                </span>
-              </div>
+              
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // ป้องกันไม่ให้ไป trigger onSelectEntry
+                  onDelete(entry.id);
+                }}
+                className="opacity-0 group-hover:opacity-100 p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-opacity duration-200"
+                title="ลบบันทึก"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </button>
             </div>
           ))
         ) : (
